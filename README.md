@@ -1,13 +1,21 @@
-# PRG08-Week2-oefening1
+# PRG08 Week2 oefening1
 
-## Singleton
+## OPDRACHT
 
-- Ga verder met de code van 'Close Call' uit week 1
+- Maak de [Bomb Clicker opdracht van week 1 af](https://github.com/HR-CMGT/PRG08-Week1-oefening1)
 - Maak de Game class een singleton.
-- Roep de game instance aan vanuit car en wheel.
-- Maak een Util class met een static method `checkCollision`. Deze method krijgt twee instances binnen als arguments, en kan checken of die elkaar raken. De instances moeten een x,y, width en height eigenschap hebben.
-- Vraag: Hoe zorg je er voor dat je alleen arguments kan doorgeven die daadwerkelijk een x,y, width en height eigenschap hebben?
-- In de game loop roep je de collision method van Util aan om te zien of de car en de rock elkaar raken.
+- Maak een Util class met een static method `checkCollision`. 
+- Maak een DomObject class met inheritance, voor de Car en Bomb. In het DomObject wordt de "div" gemaakt en aan de "foreground" toegevoegd met AppendChild.
+- Bestuur de auto met de cursortoetsen. 
+- Verwijder de click handler van de bombs.
+- De bombs moeten nu verwijderd worden door er met de auto onder te gaan staan. 
+- Als een bomb de auto raakt krijg je een punt en gaat de bomb weg.
+- Als er vier bommen doorgekomen zijn is het game over.
+- Laat een upgrade vallen net zoals de bombs. Als je die pakt, dan zijn alle gebouwen weer gefixed.
+
+## BONUS OPDRACHT
+
+- Maak de besturing geschikt voor mobiel: door op het scherm te drukken rijdt de auto die richting op.
 
 ## Voorbeeldcode
 
@@ -27,23 +35,56 @@ class SingletonExample {
     }
 }
 ```
-### Game instance ophalen via Singleton
-```
-let g : Game = Game.getInstance();
-```
 
 ### Collision 
 
-Let op dat de instances een x, y, width en height moeten hebben:
+Gebruik de DOM rectangle om de positie en afmeting van een element te achterhalen:
 
 ```
-let instance1 = new Car();
-let instance2 = new Rock();
+let element : HTMLElement = document.createElement("div")
+let rectangle : ClientRect = element.getBoundingClientRect()
 
-if (instance1.x < instance2.x + instance2.width &&
-   instance1.x + instance1.width > instance2.x &&
-   instance1.y < instance2.y + instance2.height &&
-   instance1.height + instance1.y > instance2.y) {
-    // collision detected!
+function checkCollision(a: ClientRect, b: ClientRect) {
+    return (a.left <= b.right &&
+          b.left <= a.right &&
+          a.top <= b.bottom &&
+          b.top <= a.bottom)
 }
 ```
+
+### Movement controls
+
+```
+class Fish {
+    leftSpeed : number = 0
+    rightSpeed : number = 0
+
+    constructor(){
+        window.addEventListener("keydown", (e:KeyboardEvent) => this.onKeyDown(e))
+        window.addEventListener("keyup", (e:KeyboardEvent) => this.onKeyUp(e))
+    }
+    onKeyDown(event:KeyboardEvent):void {
+        switch(event.keyCode){
+        case 87:
+            this.leftSpeed = 5
+            break
+        case 83:
+            this.rightSpeed = 5
+            break
+        }
+    }
+    
+    onKeyUp(event:KeyboardEvent):void {
+        switch(event.keyCode){
+        case 87:
+            this.leftSpeed = 0
+            break
+        case 83:
+            this.rightSpeed = 0
+            break
+        }
+    }
+}
+```
+
+
